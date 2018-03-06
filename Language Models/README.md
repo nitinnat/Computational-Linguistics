@@ -30,11 +30,9 @@ The following steps are carried out in sequence: </br>
 		The bigram counts and the unigram counts were then obtained and converted into Prolog-readable format.
 		These counts will be useful for the next step, when we calculate log probabilities of sentences.
 		</li>
-
 		<li>
 		Laplacian Smoothing and Add-alpha Smoothing was applied in order to account for non-existent ungirams and bigrams.
 		</li>
-
 
 </ol>
 
