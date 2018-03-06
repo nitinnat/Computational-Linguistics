@@ -1,0 +1,124 @@
+#!/bin/bash
+
+#Replace these situations of @
+cat "DA.txt"| tr 'I@' 'I' | tr 'm@ch@' 'mache' | tr 'gr@ce' 'grace' > "DA2.txt" 
+#Remove capitalization
+sed -i 's/\(.*\)/\L\1/g' "DA2.txt"
+#Replace mr., mrs, mrs., dr. with their expansions
+sed -i "s/mr\.* / mister /g" "DA2.txt"
+sed -i "s/mrs\.* / missus /g" "DA2.txt"
+sed -i "s/dr\.* / doctor /g" "DA2.txt"
+
+#Replace the following contractions with their expansions
+#Account for the cases they directly follow by .!?,;:
+sed -i "s/i've\([ |\.|\!|\?|,|\;|\:]\)/ i have \1 /g" "DA2.txt"
+sed -i "s/they've\([ |\.|\!|\?|,|\;|\:]\)/ they have \1 /g" "DA2.txt"
+sed -i "s/they're\([ |\.|\!|\?|,|\;|\:]\)/ they are \1 /g" "DA2.txt"
+sed -i "s/we're\([ |\.|\!|\?|,|\;|\:]\)/ we are \1 /g" "DA2.txt"
+sed -i "s/we've\([ |\.|\!|\?|,|\;|\:]\)/ we have \1 /g" "DA2.txt"
+sed -i "s/i'm\([ |\.|\!|\?|,|\;|\:]\)/ i am \1 /g" "DA2.txt"
+sed -i "s/you've\([ |\.|\!|\?|,|\;|\:]\)/ you have \1 /g" "DA2.txt"
+sed -i "s/you're\([ |\.|\!|\?|,|\;|\:]\)/ you are \1 /g" "DA2.txt"
+
+#the 's contraction turns to 'has' when the word is followed by been
+#Otherwise, it become 'is'
+sed -i "s/she's been/ she has been /g" "DA.txt"
+sed -i "s/she's/ she is /g" "DA2.txt"
+
+sed -i "s/he's been/ he has been /g" "DA2.txt"
+sed -i "s/he's/ he is /g" "DA2.txt"
+
+sed -i "s/it's been/ it has been /g" "DA2.txt"
+sed -i "s/it's/ it is /g" "DA2.txt"
+
+
+sed -i "s/that's been/ that has been /g" "DA2.txt"
+sed -i "s/that's/ that is /g" "DA2.txt"
+
+sed -i "s/there's been/ there has been /g" "DA2.txt"
+sed -i "s/there's/ there is /g" "DA2.txt"
+
+sed -i "s/where's/ where is /g" "DA2.txt"
+
+sed -i "s/here's/ here is /g" "DA2.txt"
+#Replace all other 's contractions with s
+sed -i "s/'s\([ |\.|\!|\?|,|\;|\:]\)/ s \1 /g" "DA2.txt"
+#Plural contraction
+sed -i "s/s'\([ |\.|\!|\?|,|\;|\:]\)/s s \1 /g" "DA2.txt"
+sed -i "s/'ll\([ |\.|\!|\?|,|\;|\:]\)/ will \1 /g" "DA2.txt"
+sed -i "s/ aven't\([ |\.|\!|\?|,|\;|\:]\)/ have not \1 /g" "DA2.txt"
+sed -i "s/ain't\([ |\.|\!|\?|,|\;|\:]\)/ is not \1 /g" "DA2.txt"
+sed -i "s/can't\([ |\.|\!|\?|,|\;|\:]\)/ cannot \1 /g" "DA2.txt"
+sed -i "s/won't\([ |\.|\!|\?|,|\;|\:]\)/ will not \1 /g" "DA2.txt"
+sed -i "s/isn't it\([ |\.|\!|\?|,|\;|\:]\)/ is it not \1 /g" "DA2.txt"
+sed -i "s/wasn't it\([ |\.|\!|\?|,|\;|\:]\)/ was it not \1 /g" "DA2.txt"
+sed -i "s/n't\([ |\.|\!|\?|,|\;|\:]\)/ not \1 /g" "DA2.txt"
+sed -i "s/'d\([ |\.|\!|\?|,|\;|\:]\)/ d \1 /g" "DA2.txt"
+
+
+#Replace double quotes with space when you have " followed by a space and a lower case character,
+# like "Good morning, O Deep Thought," said Loonquawl
+sed -i 's/\"  *\([a-z][a-z]*\)/ \1  /g' "DA2.txt"
+#Replace other double quotation marks with @ symbol
+sed -i 's/\"/ @ /g' "DA2.txt"
+#ellipsis followed by a double quotation mark represents a sentence boundary
+#So either ..." or ... "
+sed -i 's/\.\.\. *\"/ @ /g' "DA2.txt"
+
+#Do the same processing for single quotes, since we have already handled all the clitics.
+#Replace ' with space when you have ' followed by a space and a lower case character,
+# like "Good morning, O Deep Thought,' said Loonquawl
+sed -i "s/\'  *\([a-z][a-z]*\)/ \1  /g" "DA2.txt"
+#Replace double quotation marks with @ symbol
+sed -i "s/\'/ @ /g" "DA2.txt"
+#ellipsis followed by a double quotation mark represents a sentence boundary
+#So either ..." or ... "
+sed -i "s/\.\.\. *\'/ @ /g" "DA2.txt"
+
+#Replace all other ellipsis with space
+sed -i 's/\.\.\./ /g' "DA2.txt"
+
+#Normalize sentences like !!!?!!?!?
+#First replace many ???? to @
+sed -i "s/[\?][\?]*/ @ /g" "DA2.txt"
+#Second replace many !!!! to @
+sed -i "s/[\!][\!]*/ @ /g" "DA2.txt"
+
+
+#Add @ symbols for sentence boundaries
+sed -i "s/\([A-Za-z][A-Za-z]*\)[\.|\!\?]/\1 @ /g" "DA2.txt"
+
+#Replace newline characters with space
+sed -i ':a;N;$!ba;s/\n/ /g' "DA2.txt"
+
+#Replace all other punctuations with space.
+sed -i 's/[^A-Za-z0-9@][^A-Za-z0-9@]*/ /g' "DA2.txt"
+
+#Finally replace several continuous @ symbols with one
+sed -i "s/[@][@]*[ ]*[@][@]*/ @ /g" "DA2.txt"
+
+#Replace many spaces with 1 space
+sed -i 's/  */ /g' "DA2.txt"
+
+#Replace @ @ with @, because some still remain (not sure how)
+sed -i 's/@ @/ @ /g' "DA2.txt"
+
+#Write bigram counts to file
+egrep -o  "[A-Za-z0-9@]+\s[A-Za-z0-9@]+" "DA2.txt" | sort | uniq -c | sort -n -r > "bigram_counts.txt"
+#Convert to Prolog format
+sed -i "s/\(.*\)/bigram\(\1/g" "bigram_counts.txt"
+sed -i 's/  */ /g' "bigram_counts.txt"
+sed -i 's/( /(/g' "bigram_counts.txt"
+sed -i 's/\(.*\)/\1)./g' "bigram_counts.txt"
+sed -i 's/ /,/g' "bigram_counts.txt"
+#Write unigram counts to a file.
+egrep -o "[A-Za-z0-9@]+" "DA2.txt" | sort | uniq -c | sort -n -r > "unigram_counts.txt"
+#Convert to prolog readable format.
+sed -i "s/\(.*\)/unigram\(\1/g" "unigram_counts.txt"
+sed -i 's/  */ /g' "unigram_counts.txt"
+sed -i 's/( /(/g' "unigram_counts.txt"
+sed -i 's/\(.*\)/\1)./g' "unigram_counts.txt"
+sed -i 's/ /,/g' "unigram_counts.txt"
+#Rename to .pl
+mv "bigram_counts.txt" "bigram_nitinnat.pl"
+mv "unigram_counts.txt" "unigram_nitinnat.pl"
