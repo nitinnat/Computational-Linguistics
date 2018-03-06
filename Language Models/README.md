@@ -1,4 +1,4 @@
-# Finite State Transducers
+# Language Models
 
 <br> A language model is used to model the occurences of various sentences within a language.
 It provides a definitive way of calculating the negative log likelihood for each input sentence.
